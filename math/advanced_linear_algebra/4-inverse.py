@@ -21,10 +21,10 @@ def cofactor(matrix):
         return [[1]]
     cofactors = []
     for i in range(len(matrix)):
-row = []
+        row = []
         for j in range(len(matrix)):
-            sub = [r[:j] + r[j + 1:]
-                   for r in (matrix[:i] + matrix[i + 1:])]
+            rows = matrix[:i] + matrix[i + 1:]
+            sub = [r[:j] + r[j + 1:] for r in rows]
             row.append(((-1) ** (i + j)) * determinant(sub))
         cofactors.append(row)
     return cofactors
@@ -33,17 +33,17 @@ row = []
 def adjugate(matrix):
     """Calculate the adjugate matrix of a matrix."""
     cof = cofactor(matrix)
-    return [[cof[j][i] for j in range(len(cof))]
-            for i in range(len(cof))]
+    n = len(cof)
+    return [[cof[j][i] for j in range(n)] for i in range(n)]
 
 
 def inverse(matrix):
     """Calculate the inverse of a matrix, or None if singular."""
-    if type(matrix) is not list or len(matrix) == 0 or \
-            not all(type(row) is list for row in matrix):
+    if type(matrix) is not list or len(matrix) == 0:
         raise TypeError("matrix must be a list of lists")
-    if len(matrix) != len(matrix[0]) or \
-            not all(len(row) == len(matrix) for row in matrix):
+    if not all(type(row) is list for row in matrix):
+        raise TypeError("matrix must be a list of lists")
+    if not all(len(row) == len(matrix) for row in matrix):
         raise ValueError("matrix must be a non-empty square matrix")
     det = determinant(matrix)
     if det == 0:
