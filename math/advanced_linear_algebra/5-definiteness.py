@@ -7,19 +7,21 @@ def definiteness(matrix):
     """Calculate the definiteness of a matrix."""
     if type(matrix) is not np.ndarray:
         raise TypeError("matrix must be a numpy.ndarray")
-    if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
+    if matrix.ndim != 2:
+        return None
+    if matrix.shape[0] != matrix.shape[1]:
         return None
     if matrix.size == 0:
         return None
-    if not np.array_equal(matrix, matrix.T):
+    if not np.array_equal(matrix.T, matrix):
         return None
-    eigenvalues =np.linalg.eigvals(matrix)
-    if np.all(eigenvalues > 0):
+    w = np.linalg.eigvals(matrix)
+    if np.all(w > 0):
         return "Positive definite"
-    if np.all(eigenvalues >= 0):
+    if np.all(w >= 0):
         return "Positive semi-definite"
-    if np.all(eigenvalues < 0):
+    if np.all(w < 0):
         return "Negative definite"
-    if np.all(eigenvalues <= 0):
+    if np.all(w <= 0):
         return "Negative semi-definite"
     return "Indefinite"
